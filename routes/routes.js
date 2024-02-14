@@ -8,21 +8,22 @@ const { isEmptyObject } = require('../utils/helper')
 //Post Method
 router.post('/card-tokenized', async (req, res) => {
   if (!isEmptyObject(req.body)) {
+    const { card_token = 'tok_visa' } = req.body
     await stripe.customers.createSource(
       'cus_PYnul39njqjdkJ', // instead if static user there will be original stripe user id
       {
-        source: 'tok_visa' // instead of static token there will be a token from mobile app
+        source: card_token // instead of static token there will be a token from mobile app
       },
       async (err, response) => {
         if (err) {
           return res.status(400).json({ message: err.message })
         } else if (response) {
-          const data = new Model({
+          new Model({
             token: response.id
           })
           try {
             res.status(200).json({
-              message: 'Your Card has been successfully  added'
+              message: 'Your Card has been successfully added'
             })
           } catch (error) {
             res.status(400).json({ message: error.message })
