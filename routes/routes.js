@@ -18,17 +18,18 @@ router.post('/card-tokenized', async (req, res) => {
         if (err) {
           return res.status(400).json({ message: err.message })
         } else if (response) {
-          new Model({
-            token: response.id
-          })
           try {
+            const data = new Model({
+              token: response.id
+            })
+            data.save()
             res.status(200).json({
-              message: 'Your Card has been successfully added'
+              message: 'Your Card has been successfully added',
+              data
             })
           } catch (error) {
             res.status(400).json({ message: error.message })
           }
-          return res.status(200).json()
         } else {
           res.status(400).json({ message: 'Something went wrong!' })
         }
